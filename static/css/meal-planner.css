@@ -1,0 +1,15 @@
+@media print {
+    .no-print {
+      display: none !important;
+    }
+  
+    input[type="checkbox"] {
+      display: none;
+    }
+  
+    /* Keep strike-through on printed list */
+    input[type="checkbox"]:checked + span {
+      text-decoration: line-through;
+      color: #6b7280; /* gray-500 */
+    }
+  }

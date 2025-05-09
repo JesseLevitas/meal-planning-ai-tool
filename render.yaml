@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ai-meal-planner
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn main:app
+    envVars:
+      - key: SPOONACULAR_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false

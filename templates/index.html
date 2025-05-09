@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Meal Planner</title>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="/static/css/meal-planner.css">
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 min-h-screen flex items-start justify-center p-6 font-sans">
+  <div class="w-full max-w-3xl space-y-10">
+
+    <header class="text-center space-y-2 no-print">
+      <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">🍽️ AI Meal Planner</h1>
+      <p class="text-gray-600">Generate a weekly plan and a smart grocery list in one click.</p>
+    </header>
+
+    <form method="post" class="grid gap-4 bg-white/70 backdrop-blur p-8 rounded-2xl shadow-lg ring-1 ring-gray-200 no-print">
+      <label class="block">
+        <span class="text-sm font-medium text-gray-700">Diet</span>
+        <select name="diet" class="p-2 mt-1 rounded border w-full">
+          <option value="">Any diet</option>
+          <option>vegetarian</option>
+          <option>vegan</option>
+          <option>keto</option>
+          <option>gluten free</option>
+          <option>pescetarian</option>
+          <option>paleo</option>
+          <option>primal</option>
+
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-medium text-gray-700">Exclusions (comma-separated)</span>
+        <input name="exclusions" class="p-2 mt-1 rounded border w-full" />
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-medium text-gray-700">Number of people</span>
+        <input type="number" min="1" name="people" value="1" class="p-2 mt-1 rounded border w-full" />
+      </label>
+
+      <button type="submit" class="bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 shadow">
+        Generate plan
+      </button>
+    </form>
+
+
+    {% if message %}
+        <div class="bg-red-100 text-red-800 p-3 rounded-lg shadow font-medium border border-red-200">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    {% if meal_titles %}
+    <section class="space-y-8">
+      <div class="space-y-4 no-print">
+        <h2 class="text-2xl font-semibold">Chosen Recipes</h2>
+    
+        <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+          {% for i in range(meal_titles | length) %}
+            <article class="bg-white rounded-xl shadow ring-1 ring-gray-100 overflow-hidden flex flex-col">
+              <a href="{{ recipe_urls[i] }}" target="_blank"
+                 class="flex-1 flex flex-col hover:opacity-90 transition">
+                <img src="{{ meal_images[i] }}"
+                     alt="{{ meal_titles[i] }}"
+                     class="h-32 w-full object-cover" />
+    
+                <div class="p-4 space-y-1 flex-1 flex flex-col">
+                  <h3 class="font-medium text-gray-900 text-sm leading-snug flex-1">
+                    {{ meal_titles[i] }}
+                  </h3>
+                </div>
+              </a>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Grocery list -->
+      <h2 class="text-2xl font-semibold">Grocery List</h2>
+      <div id="grocery-print" class="bg-white p-6 rounded-xl shadow ring-1 ring-gray-100">
+        <ul id="grocery-list" class="space-y-1">
+          {% for name, size in groceries.items() %}
+            <li>
+              <label class="inline-flex items-start gap-2 select-none">
+                <input type="checkbox" class="mt-1 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
+                <span>{{ name }} – {{ size }}</span>
+              </label>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="flex gap-3 no-print">
+        <button type="button" onclick="window.print()" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 shadow">
+          Print / Save
+        </button>
+        <button type="button" id="reset-btn" class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 shadow">
+          Reset Checks
+        </button>
+      </div>
+    </section>
+    {% endif %}
+  </div>
+
+  <script src="/static/js/meal-planner.js"></script>
+</body>
+</html>
