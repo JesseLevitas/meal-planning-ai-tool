@@ -65,6 +65,9 @@ def home():
                 meals_local        = meal_plan["meals"]
                 meal_images_local  = meal_plan["meal_images"]
                 ingredient_local   = meal_plan["ingredient_list"]
+                
+                message = str(meals_local)
+                return render_template("index.html", message=message)
             except Exception as e:
                 message = f"Error fetching data from Spoonacular: {e}"
                 return render_template("index.html", message=message)
