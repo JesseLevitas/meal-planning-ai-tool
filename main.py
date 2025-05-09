@@ -54,19 +54,20 @@ def home():
             message = "Please enter a valid number of people (1 or more)."
             return render_template("index.html", message=message)
 
-        try:
-            if USE_TEST_DATA:
-                meals_local        = meals
-                meal_images_local  = meal_images
-                ingredient_local   = ingredient_list
-            else:
+       
+        if USE_TEST_DATA:
+            meals_local        = meals
+            meal_images_local  = meal_images
+            ingredient_local   = ingredient_list
+        else:
+            try:
                 meal_plan = get_meal_plan(diet, exclusions, num_people)
                 meals_local        = meal_plan["meals"]
                 meal_images_local  = meal_plan["meal_images"]
                 ingredient_local   = meal_plan["ingredient_list"]
-        except Exception as e:
-            message = f"Error fetching data from Spoonacular: {e}"
-            return render_template("index.html", message=message)
+            except Exception as e:
+                message = f"Error fetching data from Spoonacular: {e}"
+                return render_template("index.html", message=message)
 
         try:
             title_to_url = {}
