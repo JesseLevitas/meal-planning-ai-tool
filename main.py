@@ -8,9 +8,10 @@ import json, os, re
 import itertools
 from test_data import meals, meal_images, ingredient_list
 from ignored_ingredients import l
-
+from pathlib import Path
 
 load_dotenv()
+print("[DEBUG] .env file loaded:", Path(".env").read_text())
 # load API keys:
 USE_TEST_DATA = os.getenv("USE_TEST_DATA", "true").lower() == "true"
 print("USE_TEST_DATA =", USE_TEST_DATA)
@@ -54,23 +55,26 @@ def home():
             message = "Please enter a valid number of people (1 or more)."
             return render_template("index.html", message=message)
 
-       
-        if USE_TEST_DATA:
-            meals_local        = meals
-            meal_images_local  = meal_images
-            ingredient_local   = ingredient_list
-        else:
-            try:
+        try:
+            if USE_TEST_DATA:
+                meals_local        = meals
+                meal_images_local  = meal_images
+                ingredient_local   = ingredient_list
+            else:
                 meal_plan = get_meal_plan(diet, exclusions, num_people)
-                meals_local        = meal_plan["meals"]
-                meal_images_local  = meal_plan["meal_images"]
-                ingredient_local   = meal_plan["ingredient_list"]
-                
-                message = str(meals_local)
-                return render_template("index.html", message=message)
-            except Exception as e:
-                message = f"Error fetching data from Spoonacular: {e}"
-                return render_template("index.html", message=message)
+                if not meal_plan:
+                    print("[WARN] Falling back to test data due to Spoonacular error")
+                    message = "Spoonacular API limit reached – using demo data."
+                    meals_local        = meals
+                    meal_images_local  = meal_images
+                    ingredient_local   = ingredient_list
+                else:
+                    meals_local        = meal_plan["meals"]
+                    meal_images_local  = meal_plan["meal_images"]
+                    ingredient_local   = meal_plan["ingredient_list"]
+        except Exception as e:
+            message = f"Error fetching data from Spoonacular: {e}"
+            return render_template("index.html", message=message)
 
         try:
             title_to_url = {}
@@ -170,14 +174,8 @@ def get_meal_plan(diet, exclusions, num_people):
 
     resp = requests.get(url, params=params)
     if resp.status_code != 200:
-        return {
-            "meals": [f"Error {resp.status_code} {resp.text}"],
-            "meal_images": [],
-            "ingredient_list": [],
-            "total_servings": 0,
-            "people": num_people,
-            "target_servings": num_people * 21,
-        }
+        print(f"[ERROR] Spoonacular API failed: {resp.status_code} - {resp.text}")
+        return None
 
     data = resp.json()
 
