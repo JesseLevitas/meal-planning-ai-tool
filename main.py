@@ -64,10 +64,9 @@ def home():
                 meals_local        = meal_plan["meals"]
                 meal_images_local  = meal_plan["meal_images"]
                 ingredient_local   = meal_plan["ingredient_list"]
-        except Exception:
-            meals_local = meals
-            meal_images_local  = meal_images
-            ingredient_local   = ingredient_list
+        except Exception as e:
+            message = f"Error fetching data from Spoonacular: {e}"
+            return render_template("index.html", message=message)
 
         try:
             title_to_url = {}
