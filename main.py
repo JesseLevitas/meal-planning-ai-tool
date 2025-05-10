@@ -8,10 +8,8 @@ import json, os, re
 import itertools
 from test_data import meals, meal_images, ingredient_list
 from ignored_ingredients import l
-from pathlib import Path
 
 load_dotenv()
-print("[DEBUG] .env file loaded:", Path(".env").read_text())
 # load API keys:
 USE_TEST_DATA = os.getenv("USE_TEST_DATA", "true").lower() == "true"
 print("USE_TEST_DATA =", USE_TEST_DATA)
