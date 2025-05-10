@@ -18,7 +18,7 @@ README
 - Groq: make a free account here, get your api key, and paste it into the .env file: https://console.groq.com/home
 - Same thing for spoonacular here: https://spoonacular.com/food-api/console#Dashboard
 
-5. Run the app using ```python main.py``` and navigate to the address that it is running on using any browser (should be output right after running this in terminal)
+5. Run the app using ```python run.py``` and navigate to the address that it is running on using any browser (should be output right after running this in terminal)
 
 ### Note:
 - There might be an error once in a while caused by the way Groq responds. If this happens, just click on "generate plan" again or reload the page.
