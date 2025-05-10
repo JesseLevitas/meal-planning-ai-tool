@@ -6,8 +6,8 @@ from groq import Groq
 from dotenv import load_dotenv
 import json, os, re
 import itertools
-from test_data import meals, meal_images, ingredient_list
-from ignored_ingredients import l
+from .test_data import meals, meal_images, ingredient_list
+from .ignored_ingredients import l
 
 load_dotenv()
 # load API keys:
